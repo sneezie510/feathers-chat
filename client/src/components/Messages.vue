@@ -3,7 +3,7 @@
     <input type="text" placeholder="Enter message" v-model="newMessage" @keyup.enter="tryAddMessage">
     <button type="submit" @click="tryAddMessage">Add message</button>
     <ul>
-      <li v-for="message in messages">
+      <li v-for="message in messages" v-bind:key="message">
         <span>{{ message.text }}</span>
         <span @click="tryRemoveMessage(message)">x</span>
       </li>
@@ -32,7 +32,6 @@
         newMessage: ''
       }
     },
-
     ready () {
       this.fetchMessages()
       this.addMessage()
