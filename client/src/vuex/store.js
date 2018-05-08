@@ -22,6 +22,13 @@ const mutations = {
     let index = _.findIndex(state.messages, { _id: message._id })
     // remove the obj at position [index] from array
     state.messages.$remove(state.messages[index])
+  },
+
+  EDIT_MESSAGE (state, message) {
+    // find the index of the obj to edit from array
+    let index = _.findIndex(state.messages, { _id: message._id })
+    // edit the obj at position [index] from array
+    state.messages.push(state.messages[index])
   }
 }
 
