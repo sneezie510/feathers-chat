@@ -22,7 +22,7 @@ export const removeMessage = function ({dispatch}) {
 }
 
 export const editMessage = function ({dispatch}) {
-  // A message has been removed from the server, so dispatch a mutation to update our state/view
+  // A message has been edited on the server, so dispatch a mutation to update our state/view
   services.messageService.on('patched', message => {
     dispatch('EDIT_MESSAGE', message)
   })

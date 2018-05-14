@@ -1,15 +1,13 @@
 <template>
   <div>
-    <input type="text" ref="new_message" :value="newMessage" placeholder="Enter message" v-model="newMessage" :disabled="!isEditing" :class="{view: !isEditing}" @keyup.enter="tryAddMessage">
+    <input type="text" placeholder="Enter message" v-model="newMessage" @keyup.enter="tryAddMessage">
     <button type="submit" @click="tryAddMessage">Add message</button>
     <ul>
       <li v-for="message in messages" v-bind:key="message">
         <span>{{ message.text }}</span>
         <button @click="tryRemoveMessage(message._id)">x</button>
-        <button @click="isEditing = !isEditing" v-if="!isEditing">Edit</button>
-        <button @click="save" v-else-if="isEditing">Save</button>
-        <button v-if="isEditing" @click="isEditing = false">Cancel</button>
-        <!-- <v-if="tryEditMessage"> type="text" placeholder="Enter message" v-model="newMessage" @keyup.enter="tryAddMessage"> -->
+        <input type="text" placeholder="{{ message.text }}" v-model="editedMessage" @keyup.enter="tryEditMessage">
+        <button @click="tryEditMessage(message._id)" v-bind="editedMessage">Edit</button>
       </li>
     </ul>
   </div>
@@ -30,12 +28,15 @@
         addMessage,
         removeMessage,
         editMessage
+      },
+      store: {
+        messages: []
       }
     },
     data () {
       return {
         newMessage: '',
-        isEditing: false
+        editedMessage: ''
       }
     },
     ready () {
@@ -44,7 +45,6 @@
       this.removeMessage()
       this.editMessage()
     },
-
     methods: {
       tryAddMessage () {
         if (this.newMessage.trim()) {
@@ -57,16 +57,11 @@
         services.messageService.remove(message)
       },
       tryEditMessage (message) {
-        // Update message to db
-        this.newMessage = ''
-      },
-      openEditForm (message) {
-        this.$store.dispatch('')
-      },
-      save () {
-        this.newMessage = this.$refs['new_message'].value
-        this.isEditing = !this.isEditing
-        // services.messageService.patch(message)
+        console.log('edit button clicked')
+        if (this.editedMessage.trim()) {
+          // Persist the edited message to the db
+          services.messageService.create({ text: this.editedMessage }).then(this.editedMessage = '')
+        }
       }
     }
   }
